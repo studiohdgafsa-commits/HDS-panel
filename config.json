@@ -1,9 +1,21 @@
 {
   "servers": [
-    { "name": "HDS.H", "url": "http://plus-577sghag.lol" },
-    { "name": "HDS.N", "url": "http://until56972.wd.business-cloud-neo.com" },
-    { "name": "HDS.M", "url": "http://b9999.xyz" },
-    { "name": "HDS.E", "url": "http://139730421906.elg-26.com:80" }
+    {
+      "name": "HDS.H",
+      "url": "http://plus-577sghag.lol"
+    },
+    {
+      "name": "HDS.N",
+      "url": "http://until56972.wd.business-cloud-neo.com"
+    },
+    {
+      "name": "HDS.M",
+      "url": "http://b9999.xyz"
+    },
+    {
+      "name": "HDS.E",
+      "url": "http://139730421906.elg-26.com:80"
+    }
   ],
   "whatsapp": "21629575199",
   "waLabel": "استفسار",
