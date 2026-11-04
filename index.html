@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>لوحة تحكم HDS New Player</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#070b24;--panel:#0e1538;--line:#243060;--tx:#eef2ff;--mut:#97a3d1;--blue:#1ea7ff;--pink:#ff2fa0;--ok:#25d366;--err:#ff6b6b}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(1200px 500px at 90% -10%,#1b2a7a55,transparent),var(--bg);color:var(--tx);font-family:Tajawal,system-ui,sans-serif;line-height:1.6}
+main{max-width:760px;margin:0 auto;padding:20px 16px 90px}
+h1{font-size:24px;margin:8px 0 2px;font-weight:800}
+h1 span{background:linear-gradient(90deg,var(--blue),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--mut);margin:0 0 18px;font-size:14px}
+section,details{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+h2{font-size:16px;margin:0 0 12px;font-weight:700}
+summary{cursor:pointer;font-weight:700;font-size:16px}
+label{display:block;font-size:13px;color:var(--mut);margin:12px 0 4px}
+input{width:100%;background:#080d2b;border:1px solid var(--line);color:var(--tx);border-radius:10px;padding:11px 12px;font:inherit;font-size:15px}
+input:focus{outline:2px solid var(--blue);border-color:transparent}
+input[dir=ltr]{text-align:left}
+.row{display:grid;grid-template-columns:1fr 2fr auto;gap:8px;margin-bottom:8px;align-items:center}
+.row button{padding:10px 12px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+button{font:inherit;font-weight:700;border:0;border-radius:10px;padding:12px 18px;cursor:pointer;color:#fff;background:#24307a}
+button:hover{filter:brightness(1.15)}
+button.main{background:linear-gradient(90deg,var(--blue),var(--pink))}
+button.del{background:#4a1d3a;color:#ffb3d6}
+.bar{position:fixed;inset:auto 0 0 0;background:#070b24ee;border-top:1px solid var(--line);padding:10px 16px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+#msg{min-height:24px;margin:6px 2px 12px;font-size:14px}
+#msg.ok{color:var(--ok)}#msg.err{color:var(--err)}
+small{color:var(--mut)}
+@media(max-width:520px){.row{grid-template-columns:1fr auto}.row input:nth-child(2){grid-column:1/-1;grid-row:2}.g2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main>
+  <h1>لوحة تحكم <span>HDS New Player</span></h1>
+  <p class="sub">عدّل الإعدادات هنا ثم اضغط «حفظ ونشر». يلتقطها التطبيق عند فتحه التالي.</p>
+  <div id="msg"></div>
+
+  <section>
+    <h2>السرفرات</h2>
+    <div id="servers"></div>
+    <button type="button" id="addSrv">إضافة سرفر</button>
+  </section>
+
+  <section>
+    <h2>التواصل</h2>
+    <div class="g2">
+      <div><label for="wa">رقم الواتساب (مع رمز الدولة)</label><input id="wa" dir="ltr" inputmode="tel" placeholder="21629575199"></div>
+      <div><label for="waL">نص زر الواتساب</label><input id="waL"></div>
+      <div><label for="fb">رابط الفيسبوك</label><input id="fb" dir="ltr" inputmode="url" placeholder="https://www.facebook.com/..."></div>
+      <div><label for="fbL">نص زر الفيسبوك</label><input id="fbL"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>رسالة الترحيب</h2>
+    <label for="wl">تظهر عند أول فتح للتطبيق</label>
+    <input id="wl">
+  </section>
+
+  <details id="gh">
+    <summary>الاتصال بـ GitHub (مرة واحدة)</summary>
+    <div class="g2">
+      <div><label for="u">اسم المستخدم</label><input id="u" dir="ltr" autocapitalize="off"></div>
+      <div><label for="r">اسم المستودع</label><input id="r" dir="ltr" autocapitalize="off"></div>
+      <div><label for="b">الفرع</label><input id="b" dir="ltr" value="main"></div>
+      <div><label for="f">اسم الملف</label><input id="f" dir="ltr" value="config.json"></div>
+    </div>
+    <label for="t">رمز الوصول (Token)</label>
+    <input id="t" type="password" dir="ltr" autocomplete="off" placeholder="github_pat_...">
+    <small>يُحفظ في هذا المتصفح فقط ولا يُرسل إلا إلى GitHub.</small>
+  </details>
+</main>
+<div class="bar">
+  <button class="main" id="save" type="button">حفظ ونشر</button>
+  <button id="load" type="button">تحميل الحالي</button>
+  <button id="dl" type="button">تنزيل config.json</button>
+</div>
+<script>
+(function(){
+  var $=function(i){return document.getElementById(i)};
+  var KEY="hdsPanel";
+  function msg(t,c){var m=$("msg");m.textContent=t;m.className=c||""}
+  /* --- réglages GitHub --- */
+  var st={};try{st=JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){}
+  var m=location.hostname.match(/^([^.]+)\.github\.io$/);
+  if(m&&!st.u){st.u=m[1];var seg=location.pathname.split("/")[1];if(seg)st.r=seg}
+  ["u","r","b","f","t"].forEach(function(k){if(st[k])$(k).value=st[k]});
+  function gh(){var o={u:$("u").value.trim(),r:$("r").value.trim(),b:$("b").value.trim()||"main",f:$("f").value.trim()||"config.json",t:$("t").value.trim()};localStorage.setItem(KEY,JSON.stringify(o));return o}
+  if(!st.t)$("gh").open=true;
+  /* --- serveurs --- */
+  function addRow(n,u){
+    var d=document.createElement("div");d.className="row";
+    var a=document.createElement("input");a.placeholder="الاسم";a.value=n||"";
+    var b=document.createElement("input");b.placeholder="http://السرفر:المنفذ";b.dir="ltr";b.value=u||"";
+    var x=document.createElement("button");x.type="button";x.className="del";x.textContent="حذف";x.onclick=function(){d.remove()};
+    d.appendChild(a);d.appendChild(b);d.appendChild(x);$("servers").appendChild(d);
+  }
+  $("addSrv").onclick=function(){addRow("","")};
+  function fill(c){
+    c=c||{};$("servers").innerHTML="";(c.servers||[]).forEach(function(s){addRow(s.name,s.url)});
+    $("wa").value=c.whatsapp||"";$("waL").value=c.waLabel||"استفسار";
+    $("fb").value=c.facebook||"";$("fbL").value=c.fbLabel||"جديد المنصة";
+    $("wl").value=c.welcome||"";
+  }
+  function collect(){
+    var servers=[];
+    [].forEach.call($("servers").children,function(r){var i=r.querySelectorAll("input"),n=i[0].value.trim(),u=i[1].value.trim().replace(/\/+$/,"");if(n||u)servers.push({name:n,url:u})});
+    for(var k=0;k<servers.length;k++){
+      if(!servers[k].name)throw new Error("سرفر بلا اسم");
+      if(!/^https?:\/\/[^\s]+$/i.test(servers[k].url))throw new Error("عنوان السرفر «"+servers[k].name+"» يجب أن يبدأ بـ http:// أو https://");
+    }
+    var fb=$("fb").value.trim();if(fb&&!/^https?:\/\//i.test(fb))throw new Error("رابط الفيسبوك غير صحيح");
+    return{servers:servers,whatsapp:$("wa").value.replace(/\D/g,""),waLabel:$("waL").value.trim()||"استفسار",facebook:fb,fbLabel:$("fbL").value.trim()||"جديد المنصة",welcome:$("wl").value.trim()};
+  }
+  /* --- API GitHub --- */
+  function api(o,extra){
+    var h={"Accept":"application/vnd.github+json"};if(o.t)h["Authorization"]="Bearer "+o.t;
+    var url="https://api.github.com/repos/"+encodeURIComponent(o.u)+"/"+encodeURIComponent(o.r)+"/contents/"+o.f.split("/").map(encodeURIComponent).join("/");
+    return{url:url,h:h};
+  }
+  function dec(b){var s=atob(b.replace(/\s/g,""));var a=new Uint8Array(s.length);for(var i=0;i<s.length;i++)a[i]=s.charCodeAt(i);return new TextDecoder().decode(a)}
+  function enc(t){var a=new TextEncoder().encode(t),s="";for(var i=0;i<a.length;i++)s+=String.fromCharCode(a[i]);return btoa(s)}
+  function load(quiet){
+    var o=gh();if(!o.u||!o.r){if(!quiet)msg("أدخل اسم المستخدم والمستودع في قسم الاتصال","err");return}
+    var a=api(o);
+    fetch(a.url+"?ref="+encodeURIComponent(o.b)+"&t="+Date.now(),{headers:a.h}).then(function(r){
+      if(r.status===404)throw new Error("الملف غير موجود بعد في المستودع");
+      if(!r.ok)throw new Error("تعذّر التحميل ("+r.status+")");return r.json()}).then(function(j){fill(JSON.parse(dec(j.content)));if(!quiet)msg("تم تحميل الإعدادات الحالية","ok")}).catch(function(e){msg(e.message,"err")});
+  }
+  function save(){
+    var o=gh(),c;
+    try{c=collect()}catch(e){return msg(e.message,"err")}
+    if(!o.u||!o.r||!o.t)return msg("أكمل بيانات الاتصال برمز الوصول أولاً","err");
+    msg("جارٍ الحفظ…");
+    var a=api(o);a.h["Content-Type"]="application/json";
+    fetch(a.url+"?ref="+encodeURIComponent(o.b)+"&t="+Date.now(),{headers:a.h}).then(function(r){
+      if(r.status===404)return null;if(!r.ok)throw new Error("تعذّر الوصول إلى المستودع ("+r.status+") — تحقق من الرمز");return r.json()}).then(function(j){
+      var body={message:"تحديث الإعدادات من اللوحة",content:enc(JSON.stringify(c,null,2)),branch:o.b};if(j&&j.sha)body.sha=j.sha;
+      return fetch(a.url,{method:"PUT",headers:a.h,body:JSON.stringify(body)})}).then(function(r){
+      if(!r.ok)throw new Error("فشل الحفظ ("+r.status+") — تأكد أن الرمز يملك صلاحية Contents: Read and write");
+      msg("تم الحفظ والنشر. يصل التغيير إلى التطبيق خلال بضع دقائق.","ok")}).catch(function(e){msg(e.message,"err")});
+  }
+  function dl(){
+    var c;try{c=collect()}catch(e){return msg(e.message,"err")}
+    var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(c,null,2)],{type:"application/json"}));a.download="config.json";a.click();
+  }
+  $("save").onclick=save;$("load").onclick=function(){load(false)};$("dl").onclick=dl;
+  fill({servers:[],waLabel:"استفسار",fbLabel:"جديد المنصة"});
+  load(true);
+})();
+</script>
+</body>
+</html>
