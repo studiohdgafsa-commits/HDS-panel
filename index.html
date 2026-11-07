@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-IPp0WH/69eTfZdHRu0JVWR4n8pEZ+VgF1+LnBX1k5ns='; style-src 'sha256-fG2wIdtnMop8MqVMDKlH0EUaBfFbaUHBRhUnZKmqQB8='; connect-src 'self' https://api.github.com; img-src data: blob:; base-uri 'none'; form-action 'none'">
+<meta name="robots" content="noindex,nofollow">
+<title>لوحة تحكم HDS</title>
+<style>:root{--bg:#050a24;--card:#0c1442;--card2:#101a58;--line:#27357a;--tx:#eef2ff;--mut:#9fb0e8;--blue:#1ea7ff;--pink:#ff2fa0;--ok:#25d366;--err:#ff6b8b;--warn:#ffc43a}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:radial-gradient(900px 500px at 90% -10%,#1a2a8a66,transparent),radial-gradient(700px 400px at 0% 110%,#7a1a6a44,transparent),var(--bg);color:var(--tx);font-family:Tajawal,"Noto Sans Arabic","Segoe UI",system-ui,sans-serif;line-height:1.6;font-size:16px}
+.hidden{display:none!important}
+.screen{min-height:100vh}
+#login{display:flex;align-items:center;justify-content:center;padding:20px}
+.lbox{width:100%;max-width:400px;background:linear-gradient(160deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:22px;padding:28px 24px;box-shadow:0 0 40px #1ea7ff33}
+.brand{font-size:44px;font-weight:900;text-align:center;letter-spacing:2px;background:linear-gradient(90deg,var(--blue),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{text-align:center;color:var(--mut);margin:0 0 18px;font-size:14px}
+label.f{display:block;font-size:14px;color:var(--mut);margin:12px 0 5px}
+input[type=text],input[type=password],input[type=url],input[type=tel],textarea,select{width:100%;background:#070d30;border:1px solid var(--line);color:var(--tx);border-radius:12px;padding:12px 14px;font:inherit;font-size:16px}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--blue);border-color:transparent}
+.ltr{direction:ltr;text-align:left}
+button{font:inherit;font-weight:700;border:0;border-radius:12px;padding:12px 18px;cursor:pointer;color:#fff;background:#26358c}
+button:hover{filter:brightness(1.15)}
+button.main{background:linear-gradient(90deg,var(--blue),var(--pink))}
+button.big{width:100%;padding:14px;font-size:18px;margin-top:16px}
+button.warn{background:#7a2a3a}
+button.ghost{background:#16215f}
+.err{color:var(--err);min-height:22px;margin-top:10px;font-size:14px;text-align:center}
+header.top{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line);background:#070d30cc;position:sticky;top:0;z-index:5;backdrop-filter:blur(6px)}
+header.top .t{font-size:20px;font-weight:800}
+header.top .t b{background:linear-gradient(90deg,var(--blue),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent}
+header.top .sp{flex:1}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#555;margin-inline-end:6px}
+.dot.ok{background:var(--ok);box-shadow:0 0 8px var(--ok)}
+.dot.no{background:var(--warn)}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:14px 18px 4px;position:sticky;top:57px;z-index:4;background:var(--bg)}
+.tabs button{white-space:nowrap;background:#121c5c;border:1px solid var(--line);padding:10px 16px}
+.tabs button.on{background:linear-gradient(90deg,var(--blue),var(--pink));border-color:transparent}
+main{max-width:860px;margin:0 auto;padding:10px 18px 120px}
+.pane{display:none}
+.pane.on{display:block}
+.card{background:linear-gradient(160deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:18px;padding:18px;margin:14px 0}
+.card h2{margin:0 0 4px;font-size:18px}
+.card p.h{margin:0 0 12px;color:var(--mut);font-size:14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.slot{display:flex;align-items:center;gap:10px;margin:10px 0}
+.slot .nm{flex:0 0 78px;text-align:center;font-weight:900;padding:10px 0;border-radius:12px;background:linear-gradient(90deg,#123a8a,#7a1a6a);direction:ltr}
+.slot input{flex:1}
+.slot .st{flex:0 0 14px}
+.sws{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.sw{display:flex;align-items:center;gap:12px;background:#0a1240;border:1px solid var(--line);border-radius:14px;padding:12px 14px;cursor:pointer;user-select:none}
+.sw input{position:absolute;opacity:0;pointer-events:none}
+.sw i{flex:0 0 46px;height:26px;border-radius:99px;background:#33407a;position:relative;transition:background .15s}
+.sw i::after{content:"";position:absolute;top:3px;inset-inline-start:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .15s}
+.sw input:checked+i{background:linear-gradient(90deg,var(--blue),var(--pink))}
+.sw input:checked+i::after{transform:translateX(-20px)}
+.sw input:focus-visible+i{outline:2px solid #fff}
+.sw span{font-size:15px}
+.note{background:#1a2260;border-inline-start:4px solid var(--blue);border-radius:10px;padding:10px 14px;margin:10px 0;font-size:14px;color:#d6e0ff}
+.note.warn{border-color:var(--warn);background:#3a2f10}
+.note ol{margin:6px 0 0;padding-inline-start:20px}
+.bar{position:fixed;inset-inline:0;bottom:0;z-index:6;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;padding:12px 16px;background:#050a24f2;border-top:1px solid var(--line)}
+.bar .st{align-self:center;color:var(--mut);font-size:13px}
+.bar .st.dirty{color:var(--warn)}
+#toast{position:fixed;inset-inline:0;top:70px;margin:auto;width:max-content;max-width:92vw;z-index:20;padding:12px 20px;border-radius:14px;background:#0e1a6a;border:1px solid var(--blue);box-shadow:0 0 24px #1ea7ff66;opacity:0;pointer-events:none;transition:opacity .2s}
+#toast.show{opacity:1}
+#toast.bad{border-color:var(--err);background:#4a1228}
+pre{direction:ltr;text-align:left;background:#040820;border:1px solid var(--line);border-radius:12px;padding:12px;overflow:auto;max-height:260px;font-size:12px}
+small.k{display:block;direction:ltr;text-align:left;color:var(--mut);word-break:break-all;font-size:11px}
+@media(max-width:560px){.grid2{grid-template-columns:1fr}.tabs{top:55px}}
+</style>
+</head>
+<body>
+<div id="login" class="screen">
+  <div class="lbox">
+    <div class="brand">HDS</div>
+    <p class="sub">لوحة التحكم في التطبيق</p>
+    <label class="f" for="lgUser">اسم المستخدم</label>
+    <input id="lgUser" type="text" class="ltr" autocomplete="username" autocapitalize="off" spellcheck="false">
+    <label class="f" for="lgPass">كلمة السر</label>
+    <input id="lgPass" type="password" class="ltr" autocomplete="current-password">
+    <button id="lgGo" class="main big" type="button">دخول</button>
+    <div id="lgErr" class="err"></div>
+  </div>
+</div>
+
+<div id="app" class="screen hidden">
+  <header class="top">
+    <div class="t">لوحة تحكم <b>HDS</b></div>
+    <div class="sp"></div>
+    <div id="ghState"><span class="dot"></span><span id="ghTxt"></span></div>
+    <button id="lockBtn" class="ghost" type="button">قفل</button>
+  </header>
+  <nav class="tabs" id="tabs">
+    <button data-t="srv" class="on" type="button">السيرفرات</button>
+    <button data-t="home" type="button">الشاشة الرئيسية</button>
+    <button data-t="links" type="button">الروابط والتواصل</button>
+    <button data-t="txt" type="button">النصوص والمقدمة</button>
+    <button data-t="maint" type="button">الصيانة</button>
+    <button data-t="sec" type="button">الأمان والاتصال</button>
+  </nav>
+  <main>
+    <section class="pane on" id="p-srv">
+      <div class="card">
+        <h2>السيرفرات</h2>
+        <p class="h">اكتب عنوان كل سيرفر. السيرفر الفارغ يظهر في التطبيق باهتاً ويكتب «غير متاح».</p>
+        <div id="slots"></div>
+      </div>
+    </section>
+
+    <section class="pane" id="p-home">
+      <div class="card">
+        <h2>أيقونات الشاشة الرئيسية</h2>
+        <p class="h">شغّل الأيقونة لإظهارها وأطفئها لإخفائها.</p>
+        <div class="sws" id="tiles"></div>
+      </div>
+      <div class="card">
+        <h2>أيقونات التواصل (أسفل الشاشة)</h2>
+        <div class="sws" id="socs"></div>
+      </div>
+      <div class="card">
+        <h2>شريط إعلان متحرك</h2>
+        <p class="h">نص يظهر أعلى الشاشة الرئيسية لكل المستخدمين. اتركه فارغاً لإخفائه.</p>
+        <input id="notice" type="text" maxlength="200" placeholder="مثال: عرض خاص هذا الأسبوع">
+      </div>
+    </section>
+
+    <section class="pane" id="p-links">
+      <div class="card">
+        <h2>واتساب</h2>
+        <div class="grid2">
+          <div><label class="f" for="wa">الرقم مع رمز الدولة</label><input id="wa" class="ltr" type="tel" inputmode="tel" placeholder="21629575199"></div>
+          <div><label class="f" for="waL">نص الزر</label><input id="waL" type="text" maxlength="30"></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>روابط الصفحات</h2>
+        <label class="f" for="fb">فيسبوك</label><input id="fb" class="ltr" type="url" placeholder="https://www.facebook.com/...">
+        <label class="f" for="ig">إنستغرام</label><input id="ig" class="ltr" type="url" placeholder="https://www.instagram.com/...">
+        <label class="f" for="tt">تيك توك</label><input id="tt" class="ltr" type="url" placeholder="https://www.tiktok.com/@...">
+        <label class="f" for="tg">تيليغرام</label><input id="tg" class="ltr" type="url" placeholder="https://t.me/...">
+      </div>
+      <div class="card">
+        <h2>أيقونتا «جديد المنصة» و«تحديث التطبيقات»</h2>
+        <label class="f" for="news">رابط «جديد المنصة» (فارغ = رابط الفيسبوك)</label><input id="news" class="ltr" type="url" placeholder="https://...">
+        <label class="f" for="upd">رابط «تحديث التطبيقات»</label><input id="upd" class="ltr" type="url" placeholder="https://...">
+      </div>
+    </section>
+
+    <section class="pane" id="p-txt">
+      <div class="card">
+        <h2>المقدمة السينمائية (5 ثوانٍ)</h2>
+        <label class="sw"><input id="introOn" type="checkbox"><i></i><span>إظهار المقدمة عند فتح التطبيق</span></label>
+        <label class="f" for="welcome">جملة الترحيب</label>
+        <input id="welcome" type="text" maxlength="120">
+      </div>
+      <div class="card">
+        <h2>مواقيت الصلاة</h2>
+        <p class="h">المدينة التي تُعرض مواقيتها (بالإنجليزية).</p>
+        <div class="grid2">
+          <div><label class="f" for="city">المدينة</label><input id="city" class="ltr" type="text" placeholder="Tunis"></div>
+          <div><label class="f" for="country">الدولة</label><input id="country" class="ltr" type="text" placeholder="Tunisia"></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>نص زر فيسبوك</h2>
+        <input id="fbL" type="text" maxlength="30">
+      </div>
+    </section>
+
+    <section class="pane" id="p-maint">
+      <div class="card">
+        <h2>وضع الصيانة</h2>
+        <p class="h">عند تشغيله تظهر رسالة تغطي التطبيق بالكامل ولا يستطيع أحد استعماله حتى تطفئه.</p>
+        <label class="sw"><input id="mOn" type="checkbox"><i></i><span>تشغيل وضع الصيانة</span></label>
+        <label class="f" for="mTxt">رسالة الصيانة</label>
+        <input id="mTxt" type="text" maxlength="240" placeholder="نعود قريباً">
+      </div>
+    </section>
+
+    <section class="pane" id="p-sec">
+      <div class="card">
+        <h2>الاتصال بـ GitHub</h2>
+        <div id="tokNote" class="note warn hidden">
+          لم يُحفظ رمز GitHub بعد، ولا يمكنك الحفظ والنشر قبل إضافته:
+          <ol>
+            <li>افتح github.com ثم Settings ثم Developer settings ثم Fine-grained tokens ثم Generate new token.</li>
+            <li>في Repository access اختر Only select repositories ثم HDS-panel.</li>
+            <li>في Permissions اختر Contents ثم Read and write.</li>
+            <li>انسخ الرمز والصقه هنا.</li>
+          </ol>
+        </div>
+        <div class="grid2">
+          <div><label class="f" for="ghU">حساب GitHub</label><input id="ghU" class="ltr" type="text" autocapitalize="off"></div>
+          <div><label class="f" for="ghR">المستودع</label><input id="ghR" class="ltr" type="text" autocapitalize="off"></div>
+          <div><label class="f" for="ghB">الفرع</label><input id="ghB" class="ltr" type="text" autocapitalize="off"></div>
+          <div><label class="f" for="ghF">ملف الإعدادات</label><input id="ghF" class="ltr" type="text" autocapitalize="off"></div>
+        </div>
+        <label class="f" for="tok">رمز الوصول (Token)</label>
+        <input id="tok" class="ltr" type="password" autocomplete="off" placeholder="github_pat_...">
+        <button id="tokSave" class="main" type="button">حفظ الرمز والإعدادات</button>
+        <p class="h">يُحفظ الرمز مشفّراً في هذا المتصفح فقط.</p>
+      </div>
+      <div class="card">
+        <h2>تغيير كلمة السر</h2>
+        <div class="grid2">
+          <div><label class="f" for="pw0">الحالية</label><input id="pw0" class="ltr" type="password" autocomplete="current-password"></div>
+          <div></div>
+          <div><label class="f" for="pw1">الجديدة (10 أحرف على الأقل)</label><input id="pw1" class="ltr" type="password" autocomplete="new-password"></div>
+          <div><label class="f" for="pw2">تأكيد الجديدة</label><input id="pw2" class="ltr" type="password" autocomplete="new-password"></div>
+        </div>
+        <button id="pwSave" class="main" type="button">تغيير كلمة السر</button>
+      </div>
+      <div class="card">
+        <h2>نسخة احتياطية وحذف الملف المشفّر</h2>
+        <p class="h">ملف vault.json في المستودع يحمل مفتاح التوقيع مشفّراً. بعد أول دخول نزّل نسخة احتياطية ثم احذفه من المستودع.</p>
+        <div class="grid2">
+          <button id="bkDl" class="ghost" type="button">تنزيل نسخة احتياطية</button>
+          <button id="vDel" class="warn" type="button">حذف vault.json من المستودع</button>
+        </div>
+      </div>
+      <div class="card">
+        <h2>المفتاح العام للتطبيق</h2>
+        <small class="k" id="pubk"></small>
+      </div>
+      <div class="card">
+        <h2>معاينة الإعدادات</h2>
+        <pre id="prev"></pre>
+      </div>
+    </section>
+  </main>
+  <div class="bar">
+    <button id="save" class="main" type="button">حفظ ونشر</button>
+    <button id="load" class="ghost" type="button">تحميل الحالي</button>
+    <button id="dl" class="ghost" type="button">تنزيل config.json</button>
+    <span id="dirty" class="st"></span>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script>(function () {
+  "use strict";
+  var $ = function (i) { return document.getElementById(i); };
+  var enc = new TextEncoder(), dec = new TextDecoder();
+  var GHD = { u: "studiohdgafsa-commits", r: "HDS-panel", b: "main", f: "config.json" };
+  var TILES = [["settings", "الإعدادات · Paramètres"], ["live", "قنوات مباشرة · Live TV"], ["movies", "أفلام · Movies"], ["radio", "راديو · Radio"], ["series", "مسلسلات · Series"], ["kids", "أطفال · Kids"], ["quran", "قرآن كريم · Coran"], ["expiry", "صلاحية السيرفر"], ["edit", "ترتيب القنوات"], ["prayer", "مواقيت الصلاة"], ["update", "تحديث التطبيقات"], ["news", "جديد المنصة · HDS News"], ["sport", "دليل الرياضة · HDS Sport"]];
+  var SOCS = [["tg", "تيليغرام"], ["wa", "واتساب"], ["tt", "تيك توك"], ["fb", "فيسبوك"], ["ig", "إنستغرام"]];
+  var SLOTS = ["H", "N", "S", "E", "M", "A", "P", "MT", "B"];
+  var DEF = {
+    servers: [{ name: "HDS.H", url: "http://plus-577sghag.lol" }, { name: "HDS.N", url: "http://until56972.wd.business-cloud-neo.com" }, { name: "HDS.E", url: "http://139730421906.elg-26.com:80" }, { name: "HDS.M", url: "http://b9999.xyz" }],
+    whatsapp: "21629575199", waLabel: "استفسار", facebook: "https://www.facebook.com/share/g/1Mx4Htun2B/", fbLabel: "جديد المنصة",
+    telegram: "https://t.me/+TQgs42z0nsA5MzY8", tiktok: "https://www.tiktok.com/@hdsmartservices", instagram: "https://www.instagram.com/hds96099?srtk=MWg1d3prYmgzZzJrag==",
+    updateUrl: "https://hds-app-store.hds-8cc.workers.dev", newsUrl: "", welcome: "مرحبا بكم في عالم الفرجة HDS", intro: true, city: "Tunis", country: "Tunisia",
+    hide: [], socOff: [], notice: "", maint: { on: false, text: "" }
+  };
+  var S = null, PASS = null, USER = "HDS", dirty = false, lastSeq = 0, failN = 0, idleT = null, built = false, tt = null;
+
+  function toast(m, bad) { var t = $("toast"); t.textContent = m; t.className = "show" + (bad ? " bad" : ""); clearTimeout(tt); tt = setTimeout(function () { t.className = ""; }, bad ? 5200 : 3200); }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+  function b64(buf) { var a = new Uint8Array(buf), s = ""; for (var i = 0; i < a.length; i++) s += String.fromCharCode(a[i]); return btoa(s); }
+  function unb64(s) { var r = atob(String(s).replace(/\s/g, "")), a = new Uint8Array(r.length); for (var i = 0; i < r.length; i++) a[i] = r.charCodeAt(i); return a; }
+  function kdf(pass, salt) {
+    return crypto.subtle.importKey("raw", enc.encode(pass), "PBKDF2", false, ["deriveKey"]).then(function (m) {
+      return crypto.subtle.deriveKey({ name: "PBKDF2", salt: salt, iterations: 310000, hash: "SHA-256" }, m, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);
+    });
+  }
+  function seal(pass, obj, pub) {
+    var salt = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12));
+    return kdf(pass, salt).then(function (k) { return crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, k, enc.encode(JSON.stringify(obj))); })
+      .then(function (ct) { return { v: 1, s: b64(salt), i: b64(iv), d: b64(ct), pub: pub }; });
+  }
+  function open(pass, v) {
+    return kdf(pass, unb64(v.s)).then(function (k) { return crypto.subtle.decrypt({ name: "AES-GCM", iv: unb64(v.i) }, k, unb64(v.d)); })
+      .then(function (pt) { return JSON.parse(dec.decode(pt)); });
+  }
+  function lsv() { try { return JSON.parse(localStorage.getItem("hdsVault2") || "null"); } catch (e) { return null; } }
+  function persist() { return seal(PASS, { k: S.k, pub: S.pub, t: S.t || "" }, S.pub).then(function (v) { localStorage.setItem("hdsVault2", JSON.stringify(v)); }); }
+
+  /* ---------- connexion ---------- */
+  var AR = { "٠": "0", "١": "1", "٢": "2", "٣": "3", "٤": "4", "٥": "5", "٦": "6", "٧": "7", "٨": "8", "٩": "9", "۰": "0", "۱": "1", "۲": "2", "۳": "3", "۴": "4", "۵": "5", "۶": "6", "۷": "7", "۸": "8", "۹": "9" };
+  function normPw(p) { var t = String(p); try { t = t.normalize("NFKC"); } catch (e) { } return t.replace(/[\u200b-\u200f\u202a-\u202e\u2066-\u2069\ufeff]/g, "").replace(/[٠-٩۰-۹]/g, function (c) { return AR[c] || c; }).trim(); }
+  function pwVariants(p) { var a = [p], t = p.trim(), n = normPw(p); if (a.indexOf(t) < 0) a.push(t); if (a.indexOf(n) < 0) a.push(n); return a; }
+  async function openAny(user, pw, v) {
+    var vs = pwVariants(pw), lastErr = null;
+    for (var i = 0; i < vs.length; i++) { try { var o = await open(user + "|" + vs[i], v); if (o && o.k) return { obj: o, pass: user + "|" + vs[i] }; } catch (e) { lastErr = e; } }
+    throw lastErr || new Error("bad");
+  }
+  function lgErr(m) { $("lgErr").textContent = m || ""; }
+  async function login() {
+    var u = $("lgUser").value.trim().toUpperCase(), p = $("lgPass").value;
+    if (!u || !p) { lgErr("أدخل اسم المستخدم وكلمة السر"); return; }
+    if (!(window.crypto && crypto.subtle)) { lgErr("هذا المتصفح لا يدعم التشفير. افتح اللوحة عبر Chrome."); return; }
+    lgErr(""); $("lgGo").disabled = true;
+    if (failN) await sleep(Math.min(failN, 6) * 900);
+    var vbytes = 0;
+    try {
+      var v = lsv(), local = !!v, got;
+      if (!v) {
+        var r = await fetch("vault.json?t=" + Date.now(), { cache: "no-store" });
+        if (!r.ok) { var er = new Error("novault"); er.code = r.status; throw er; }
+        var txt = await r.text(); vbytes = txt.length; v = JSON.parse(txt);
+      }
+      try { got = await openAny(u, p, v); } catch (e) { var er2 = new Error(e && e.name === "OperationError" ? "bad" : "tech"); er2.orig = e; throw er2; }
+      S = got.obj; PASS = got.pass; USER = u; failN = 0;
+      if (!local) await persist();
+      $("lgPass").value = ""; $("login").classList.add("hidden"); $("app").classList.remove("hidden");
+      init();
+    } catch (e) {
+      failN++;
+      if (e.message === "novault") lgErr("E1: ملف vault.json غير موجود في المستودع (الرمز " + (e.code || "?") + "). تأكد من رفعه ثم أعد المحاولة بعد دقيقة.");
+      else if (e.message === "tech") lgErr("E3: خطأ تقني في المتصفح: " + ((e.orig && (e.orig.name + " " + e.orig.message)) || "") + " — جرّب متصفح Chrome.");
+      else lgErr("E2: بيانات الدخول غير صحيحة" + (vbytes ? " (حجم vault.json = " + vbytes + " بايت، والأصلي 717)" : ""));
+    }
+    $("lgGo").disabled = false;
+  }
+  function lock() {
+    S = null; PASS = null; clearTimeout(idleT);
+    $("app").classList.add("hidden"); $("login").classList.remove("hidden"); $("lgPass").value = ""; $("tok").value = "";
+  }
+  function idle() { clearTimeout(idleT); idleT = setTimeout(function () { if (S) { lock(); lgErr("أُغلقت الجلسة لعدم النشاط"); } }, 15 * 60 * 1000); }
+
+  /* ---------- interface ---------- */
+  function go(t) {
+    [].forEach.call(document.querySelectorAll("#tabs button"), function (b) { b.classList.toggle("on", b.getAttribute("data-t") === t); });
+    [].forEach.call(document.querySelectorAll(".pane"), function (p) { p.classList.toggle("on", p.id === "p-" + t); });
+    window.scrollTo(0, 0);
+  }
+  function sw(id, label) {
+    var l = document.createElement("label"); l.className = "sw";
+    var i = document.createElement("input"); i.type = "checkbox"; i.id = id; i.checked = true;
+    var k = document.createElement("i"), s = document.createElement("span"); s.textContent = label;
+    l.appendChild(i); l.appendChild(k); l.appendChild(s); return l;
+  }
+  function build() {
+    if (built) return; built = true;
+    SLOTS.forEach(function (k) {
+      var d = document.createElement("div"); d.className = "slot";
+      var n = document.createElement("div"); n.className = "nm"; n.textContent = "HDS." + k;
+      var inp = document.createElement("input"); inp.type = "url"; inp.id = "sv-" + k; inp.className = "ltr"; inp.placeholder = "http://server:port"; inp.autocapitalize = "off";
+      var st = document.createElement("span"); st.className = "dot"; st.id = "sd-" + k;
+      d.appendChild(n); d.appendChild(inp); d.appendChild(st); $("slots").appendChild(d);
+      inp.addEventListener("input", function () { st.className = "dot" + (/^https?:\/\/\S+$/i.test(inp.value.trim()) ? " ok" : ""); });
+    });
+    TILES.forEach(function (t) { $("tiles").appendChild(sw("tl-" + t[0], t[1])); });
+    SOCS.forEach(function (t) { $("socs").appendChild(sw("sc-" + t[0], t[1])); });
+    [].forEach.call(document.querySelectorAll("#tabs button"), function (b) { b.addEventListener("click", function () { go(b.getAttribute("data-t")); }); });
+    document.addEventListener("input", function (e) { if (e.target && e.target.closest && e.target.closest("main") && !/^(pw|tok|gh)/.test(e.target.id)) { setDirty(true); preview(); } });
+    document.addEventListener("change", function (e) { if (e.target && e.target.closest && e.target.closest("main") && /^(tl|sc|introOn|mOn)/.test(e.target.id)) { setDirty(true); preview(); } });
+  }
+  function setDirty(v) { dirty = v; var d = $("dirty"); d.textContent = v ? "لديك تغييرات غير محفوظة" : ""; d.className = "st" + (v ? " dirty" : ""); }
+  function ghTxt() { var ok = !!(S && S.t); $("ghState").firstChild.className = "dot " + (ok ? "ok" : "no"); $("ghTxt").textContent = ok ? "متصل بـ GitHub" : "أضف رمز GitHub"; $("tokNote").classList.toggle("hidden", ok); }
+  function init() {
+    build(); idle();
+    var g = {}; try { g = JSON.parse(localStorage.getItem("hdsGh2") || "{}"); } catch (e) { }
+    $("ghU").value = g.u || GHD.u; $("ghR").value = g.r || GHD.r; $("ghB").value = g.b || GHD.b; $("ghF").value = g.f || GHD.f;
+    $("pubk").textContent = JSON.stringify(S.pub);
+    ghTxt(); go(S.t ? "srv" : "sec"); loadCfg(true);
+  }
+  function gh() { var g = { u: $("ghU").value.trim() || GHD.u, r: $("ghR").value.trim() || GHD.r, b: $("ghB").value.trim() || GHD.b, f: $("ghF").value.trim() || GHD.f }; localStorage.setItem("hdsGh2", JSON.stringify(g)); return g; }
+  function clean(x, n) { return String(x == null ? "" : x).replace(/[<>"'`&\\]/g, "").trim().slice(0, n); }
+
+  function fill(c) {
+    c = Object.assign({}, DEF, c || {});
+    var by = {}; (c.servers || []).forEach(function (s) { by[String(s.name).toUpperCase()] = s.url; });
+    SLOTS.forEach(function (k) { var i = $("sv-" + k); i.value = by["HDS." + k] || ""; i.dispatchEvent(new Event("input")); });
+    TILES.forEach(function (t) { $("tl-" + t[0]).checked = (c.hide || []).indexOf(t[0]) < 0; });
+    SOCS.forEach(function (t) { $("sc-" + t[0]).checked = (c.socOff || []).indexOf(t[0]) < 0; });
+    $("notice").value = c.notice || ""; $("wa").value = c.whatsapp || ""; $("waL").value = c.waLabel || ""; $("fbL").value = c.fbLabel || "";
+    $("fb").value = c.facebook || ""; $("ig").value = c.instagram || ""; $("tt").value = c.tiktok || ""; $("tg").value = c.telegram || "";
+    $("news").value = c.newsUrl || ""; $("upd").value = c.updateUrl || ""; $("welcome").value = c.welcome || ""; $("introOn").checked = c.intro !== false;
+    $("city").value = c.city || ""; $("country").value = c.country || ""; $("mOn").checked = !!(c.maint && c.maint.on); $("mTxt").value = (c.maint && c.maint.text) || "";
+    setDirty(false); preview();
+  }
+  function collect() {
+    var servers = [];
+    SLOTS.forEach(function (k) {
+      var v = $("sv-" + k).value.trim().replace(/\/+$/, "");
+      if (v) { if (!/^https?:\/\/[^\s<>"'`]+$/i.test(v)) throw new Error("عنوان السيرفر HDS." + k + " يجب أن يبدأ بـ http:// أو https://"); servers.push({ name: "HDS." + k, url: v }); }
+    });
+    var wa = $("wa").value.replace(/\D/g, ""); if (wa && (wa.length < 8 || wa.length > 15)) throw new Error("رقم الواتساب غير صحيح");
+    function link(id, label, re) { var v = $(id).value.trim(); if (!v) return ""; if (!/^https:\/\/[^\s<>"'`]+$/i.test(v) || (re && !re.test(v))) throw new Error("رابط " + label + " غير صحيح (يجب أن يبدأ بـ https://" + (re ? " ويكون من الموقع نفسه" : "") + ")"); return v; }
+    var hide = [], socOff = [];
+    TILES.forEach(function (t) { if (!$("tl-" + t[0]).checked) hide.push(t[0]); });
+    SOCS.forEach(function (t) { if (!$("sc-" + t[0]).checked) socOff.push(t[0]); });
+    return {
+      seq: 0, servers: servers, whatsapp: wa, waLabel: clean($("waL").value, 30), facebook: link("fb", "فيسبوك", /^https:\/\/(www\.|m\.|web\.)?(facebook\.com|fb\.com|fb\.me)\//i), fbLabel: clean($("fbL").value, 30),
+      telegram: link("tg", "تيليغرام", /^https:\/\/(t\.me|telegram\.me)\//i), tiktok: link("tt", "تيك توك", /^https:\/\/(www\.)?tiktok\.com\//i), instagram: link("ig", "إنستغرام", /^https:\/\/(www\.)?instagram\.com\//i),
+      updateUrl: link("upd", "التحديث"), newsUrl: link("news", "جديد المنصة"), welcome: clean($("welcome").value, 120), intro: $("introOn").checked,
+      city: clean($("city").value, 40), country: clean($("country").value, 40), hide: hide, socOff: socOff, notice: clean($("notice").value, 200), maint: { on: $("mOn").checked, text: clean($("mTxt").value, 240) }
+    };
+  }
+  var pvT = null;
+  function preview() { clearTimeout(pvT); pvT = setTimeout(function () { try { $("prev").textContent = JSON.stringify(collect(), null, 2); } catch (e) { $("prev").textContent = e.message; } }, 150); }
+
+  /* ---------- GitHub ---------- */
+  function api(g, path) { return "https://api.github.com/repos/" + encodeURIComponent(g.u) + "/" + encodeURIComponent(g.r) + "/contents/" + path.split("/").map(encodeURIComponent).join("/"); }
+  function hdr(json) { var h = { "Accept": "application/vnd.github+json" }; if (S && S.t) h["Authorization"] = "Bearer " + S.t; if (json) h["Content-Type"] = "application/json"; return h; }
+  async function loadCfg(quiet) {
+    var g = gh();
+    try {
+      var r = await fetch(api(g, g.f) + "?ref=" + encodeURIComponent(g.b) + "&t=" + Date.now(), { headers: hdr(false), cache: "no-store" });
+      if (r.status === 404) { fill(DEF); if (!quiet) toast("لا يوجد ملف إعدادات بعد. عُرضت القيم الافتراضية."); return; }
+      if (r.status === 401 || r.status === 403) throw new Error("الرمز غير صالح أو لا يملك الصلاحية (" + r.status + ")");
+      if (!r.ok) throw new Error("تعذّر التحميل (" + r.status + ")");
+      var j = await r.json(), env = JSON.parse(dec.decode(unb64(j.content))), cfg = env.payload ? JSON.parse(env.payload) : env;
+      lastSeq = +cfg.seq || 0; fill(cfg); if (!quiet) toast("تم تحميل الإعدادات الحالية");
+    } catch (e) { fill(DEF); toast(e.message || "تعذّر التحميل", true); }
+  }
+  async function sign(text) {
+    var key = await crypto.subtle.importKey("jwk", S.k, { name: "ECDSA", namedCurve: "P-256" }, false, ["sign"]);
+    return b64(await crypto.subtle.sign({ name: "ECDSA", hash: "SHA-256" }, key, enc.encode(text)));
+  }
+  async function putFile(g, path, text, msg) {
+    var url = api(g, path), sha = null;
+    var r = await fetch(url + "?ref=" + encodeURIComponent(g.b) + "&t=" + Date.now(), { headers: hdr(false), cache: "no-store" });
+    if (r.ok) sha = (await r.json()).sha; else if (r.status !== 404) throw new Error("تعذّر الوصول إلى المستودع (" + r.status + ") — تحقق من الرمز");
+    var body = { message: msg, content: b64(enc.encode(text)), branch: g.b }; if (sha) body.sha = sha;
+    var w = await fetch(url, { method: "PUT", headers: hdr(true), body: JSON.stringify(body) });
+    if (!w.ok) throw new Error("فشل الحفظ (" + w.status + ") — تأكد أن الرمز يملك Contents: Read and write");
+  }
+  async function save() {
+    if (!S) return;
+    if (!S.t) { go("sec"); toast("أضف رمز GitHub أولاً", true); return; }
+    var cfg; try { cfg = collect(); } catch (e) { toast(e.message, true); return; }
+    $("save").disabled = true;
+    try {
+      cfg.seq = Math.max(Date.now(), lastSeq + 1);
+      var payload = JSON.stringify(cfg), sig = await sign(payload), g = gh();
+      await putFile(g, g.f, JSON.stringify({ payload: payload, sig: sig }, null, 2), "تحديث الإعدادات من اللوحة");
+      lastSeq = cfg.seq; setDirty(false); toast("تم الحفظ والنشر ✓ يصل التغيير إلى التطبيق خلال دقائق");
+    } catch (e) { toast(e.message || "فشل الحفظ", true); }
+    $("save").disabled = false;
+  }
+  async function download() {
+    if (!S) return; var cfg; try { cfg = collect(); } catch (e) { toast(e.message, true); return; }
+    cfg.seq = Math.max(Date.now(), lastSeq + 1);
+    var payload = JSON.stringify(cfg), sig = await sign(payload);
+    var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify({ payload: payload, sig: sig }, null, 2)], { type: "application/json" })); a.download = "config.json"; a.click();
+  }
+  async function saveToken() {
+    if (!S) return; var t = $("tok").value.trim(); gh();
+    if (t) { if (!/^(github_pat_|ghp_)[A-Za-z0-9_]{20,}$/.test(t)) { toast("شكل الرمز غير صحيح", true); return; } S.t = t; await persist(); $("tok").value = ""; ghTxt(); toast("تم حفظ الرمز مشفّراً ✓"); loadCfg(true); }
+    else toast("تم حفظ إعدادات المستودع");
+  }
+  async function changePw() {
+    if (!S) return; var p0 = $("pw0").value, p1 = $("pw1").value, p2 = $("pw2").value;
+    if (p1.length < 10) { toast("كلمة السر الجديدة قصيرة (10 أحرف على الأقل)", true); return; }
+    if (p1 !== p2) { toast("التأكيد لا يطابق كلمة السر الجديدة", true); return; }
+    try { await openAny(USER, p0, lsv()); } catch (e) { toast("كلمة السر الحالية غير صحيحة", true); return; }
+    PASS = USER + "|" + normPw(p1); await persist(); $("pw0").value = $("pw1").value = $("pw2").value = ""; toast("تم تغيير كلمة السر ✓ احذف vault.json من المستودع الآن");
+  }
+  function backup() { var v = lsv(); if (!v) { toast("لا توجد نسخة محفوظة", true); return; } var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(v, null, 2)], { type: "application/json" })); a.download = "hds-vault-backup.json"; a.click(); }
+  async function delVault() {
+    if (!S || !S.t) { go("sec"); toast("أضف رمز GitHub أولاً", true); return; }
+    if (!window.confirm("سيُحذف vault.json من المستودع. هل نزّلت نسخة احتياطية؟")) return;
+    try {
+      var g = gh(), url = api(g, "vault.json"), r = await fetch(url + "?ref=" + encodeURIComponent(g.b) + "&t=" + Date.now(), { headers: hdr(false), cache: "no-store" });
+      if (r.status === 404) { toast("الملف غير موجود في المستودع (محذوف مسبقاً)"); return; }
+      if (!r.ok) throw new Error("تعذّر الوصول (" + r.status + ")");
+      var sha = (await r.json()).sha, d = await fetch(url, { method: "DELETE", headers: hdr(true), body: JSON.stringify({ message: "حذف الملف المشفّر", sha: sha, branch: g.b }) });
+      if (!d.ok) throw new Error("فشل الحذف (" + d.status + ")"); toast("تم حذف vault.json من المستودع ✓");
+    } catch (e) { toast(e.message || "فشل الحذف", true); }
+  }
+
+  /* ---------- liaison ---------- */
+  $("lgGo").addEventListener("click", login);
+  [$("lgUser"), $("lgPass")].forEach(function (el) { el.addEventListener("keydown", function (e) { if (e.key === "Enter") login(); }); });
+  $("lockBtn").addEventListener("click", lock);
+  $("save").addEventListener("click", save); $("load").addEventListener("click", function () { loadCfg(false); }); $("dl").addEventListener("click", download);
+  $("tokSave").addEventListener("click", saveToken); $("pwSave").addEventListener("click", changePw); $("bkDl").addEventListener("click", backup); $("vDel").addEventListener("click", delVault);
+  ["pointerdown", "keydown"].forEach(function (ev) { document.addEventListener(ev, function () { if (S) idle(); }, true); });
+  window.addEventListener("beforeunload", function (e) { if (dirty) { e.preventDefault(); e.returnValue = ""; } });
+  $("lgUser").value = "HDS";
+})();
+</script>
+</body>
+</html>
