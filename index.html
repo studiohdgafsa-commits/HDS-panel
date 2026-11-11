@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-IPp0WH/69eTfZdHRu0JVWR4n8pEZ+VgF1+LnBX1k5ns='; style-src 'sha256-fG2wIdtnMop8MqVMDKlH0EUaBfFbaUHBRhUnZKmqQB8='; connect-src 'self' https://api.github.com; img-src data: blob:; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-zktE810xrwU0YlK1YdLTjXX1Prqgv5o5EwW6Ew9V9qA='; style-src 'sha256-aUHC7P5gpR6s7cbbRuvVDM7+HdTz7mIOKpmG38qtmTo='; connect-src 'self' https://api.github.com; img-src data: blob:; base-uri 'none'; form-action 'none'">
 <meta name="robots" content="noindex,nofollow">
 <title>لوحة تحكم HDS</title>
 <style>:root{--bg:#050a24;--card:#0c1442;--card2:#101a58;--line:#27357a;--tx:#eef2ff;--mut:#9fb0e8;--blue:#1ea7ff;--pink:#ff2fa0;--ok:#25d366;--err:#ff6b8b;--warn:#ffc43a}
@@ -69,6 +69,11 @@ main{max-width:860px;margin:0 auto;padding:10px 18px 120px}
 pre{direction:ltr;text-align:left;background:#040820;border:1px solid var(--line);border-radius:12px;padding:12px;overflow:auto;max-height:260px;font-size:12px}
 small.k{display:block;direction:ltr;text-align:left;color:var(--mut);word-break:break-all;font-size:11px}
 @media(max-width:560px){.grid2{grid-template-columns:1fr}.tabs{top:55px}}
+.dv{display:flex;align-items:center;gap:8px;background:#0a1240;border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:8px 0;flex-wrap:wrap}
+.dv .m{direction:ltr;font-family:ui-monospace,Menlo,monospace;font-size:13px;color:#bcd0ff}
+.dv .l{flex:1;min-width:120px;font-weight:700}
+.dv .u{direction:ltr;color:var(--mut);font-size:12px}
+.dv button{padding:7px 12px;font-size:13px}
 </style>
 </head>
 <body>
@@ -97,6 +102,8 @@ small.k{display:block;direction:ltr;text-align:left;color:var(--mut);word-break:
     <button data-t="home" type="button">الشاشة الرئيسية</button>
     <button data-t="links" type="button">الروابط والتواصل</button>
     <button data-t="txt" type="button">النصوص والمقدمة</button>
+    <button data-t="dev" type="button">الأجهزة (MAC)</button>
+    <button data-t="look" type="button">المظهر</button>
     <button data-t="maint" type="button">الصيانة</button>
     <button data-t="sec" type="button">الأمان والاتصال</button>
   </nav>
@@ -140,17 +147,20 @@ small.k{display:block;direction:ltr;text-align:left;color:var(--mut);word-break:
         <label class="f" for="ig">إنستغرام</label><input id="ig" class="ltr" type="url" placeholder="https://www.instagram.com/...">
         <label class="f" for="tt">تيك توك</label><input id="tt" class="ltr" type="url" placeholder="https://www.tiktok.com/@...">
         <label class="f" for="tg">تيليغرام</label><input id="tg" class="ltr" type="url" placeholder="https://t.me/...">
+        <label class="f" for="yt">يوتيوب</label><input id="yt" class="ltr" type="url" placeholder="https://youtube.com/@...">
       </div>
       <div class="card">
-        <h2>أيقونتا «جديد المنصة» و«تحديث التطبيقات»</h2>
+        <h2>أيقونات «جديد المنصة» و«تحميل التطبيقات» و«الألعاب»</h2>
         <label class="f" for="news">رابط «جديد المنصة» (فارغ = رابط الفيسبوك)</label><input id="news" class="ltr" type="url" placeholder="https://...">
-        <label class="f" for="upd">رابط «تحديث التطبيقات»</label><input id="upd" class="ltr" type="url" placeholder="https://...">
+        <label class="f" for="upd">رابط «تحميل التطبيقات»</label><input id="upd" class="ltr" type="url" placeholder="https://...">
+        <label class="f" for="gm">رابط «الألعاب»</label><input id="gm" class="ltr" type="url" placeholder="https://...">
       </div>
     </section>
 
     <section class="pane" id="p-txt">
       <div class="card">
-        <h2>المقدمة السينمائية (5 ثوانٍ)</h2>
+        <h2>المقدمة (فيديو 5 ثوانٍ)</h2>
+        <p class="h">الفيديو ثابت داخل التطبيق. جملة الترحيب أدناه تُستعمل فقط إذا تعذّر تشغيل الفيديو على الجهاز.</p>
         <label class="sw"><input id="introOn" type="checkbox"><i></i><span>إظهار المقدمة عند فتح التطبيق</span></label>
         <label class="f" for="welcome">جملة الترحيب</label>
         <input id="welcome" type="text" maxlength="120">
@@ -166,6 +176,57 @@ small.k{display:block;direction:ltr;text-align:left;color:var(--mut);word-break:
       <div class="card">
         <h2>نص زر فيسبوك</h2>
         <input id="fbL" type="text" maxlength="30">
+      </div>
+    </section>
+
+    <section class="pane" id="p-dev">
+      <div class="card">
+        <h2>إضافة سيرفر لجهاز عبر عنوان MAC</h2>
+        <p class="h">يقرأ العميل عنوان MAC والمفتاح (Device Key) من أسفل شاشة الدخول في التطبيق ويعطيك إياهما. عند فتح التطبيق على ذلك الجهاز يدخل تلقائياً بالحساب الذي تضيفه هنا. بيانات الحساب تُحفظ مشفّرة ولا يراها أحد في المستودع.</p>
+        <div class="grid2">
+          <div><label class="f" for="dMac">عنوان MAC</label><input id="dMac" class="ltr" type="text" autocapitalize="characters" placeholder="AA:BB:CC:DD:EE:FF"></div>
+          <div><label class="f" for="dKey">Device Key</label><input id="dKey" class="ltr" type="text" autocapitalize="characters" placeholder="ABCD-2345"></div>
+          <div><label class="f" for="dLabel">اسم العميل (اختياري)</label><input id="dLabel" type="text" maxlength="40"></div>
+          <div><label class="f" for="dUrl">عنوان السيرفر</label><input id="dUrl" class="ltr" type="url" placeholder="http://server:port"></div>
+          <div><label class="f" for="dUser">اسم المستخدم</label><input id="dUser" class="ltr" type="text" autocapitalize="off" autocomplete="off"></div>
+          <div><label class="f" for="dPass">كلمة السر</label><input id="dPass" class="ltr" type="text" autocapitalize="off" autocomplete="off"></div>
+        </div>
+        <button id="dAdd" class="main" type="button">إضافة / تحديث الجهاز</button>
+      </div>
+      <div class="card">
+        <h2>الأجهزة المضافة <span id="dCount"></span></h2>
+        <div id="devList"></div>
+        <p class="h">بعد أي تغيير اضغط «حفظ ونشر».</p>
+      </div>
+    </section>
+
+    <section class="pane" id="p-look">
+      <div class="card">
+        <h2>خلفية التطبيق</h2>
+        <p class="h">تُطبَّق على الشاشة الرئيسية وكل الصفحات الداخلية.</p>
+        <label class="f" for="bg">نوع الخلفية</label>
+        <select id="bg">
+          <option value="hex">سداسيات نيون (الافتراضية)</option>
+          <option value="dark">داكنة بلون الثيم (الأخف على الأجهزة الضعيفة)</option>
+          <option value="blue">تدرّج أزرق</option>
+          <option value="violet">تدرّج بنفسجي</option>
+          <option value="custom">صورة من رابط خاص بك</option>
+        </select>
+        <label class="f" for="bgUrl">رابط الصورة (عند اختيار «صورة من رابط»)</label>
+        <input id="bgUrl" class="ltr" type="url" placeholder="https://.../background.jpg">
+        <label class="f" for="dim">شدة التعتيم فوق الخلفية: <span id="dimV"></span>%</label>
+        <input id="dim" type="range" min="40" max="92" step="1">
+      </div>
+      <div class="card">
+        <h2>شكل القوائم</h2>
+        <p class="h">شكل لوحات القنوات والأفلام والمسلسلات والإعدادات.</p>
+        <label class="f" for="menu">النمط</label>
+        <select id="menu">
+          <option value="glass">زجاجي شفاف (الافتراضي)</option>
+          <option value="solid">داكن صلب</option>
+          <option value="neon">إطار نيون مضيء</option>
+          <option value="round">زوايا مستديرة كبيرة</option>
+        </select>
       </div>
     </section>
 
@@ -244,17 +305,21 @@ small.k{display:block;direction:ltr;text-align:left;color:var(--mut);word-break:
   var $ = function (i) { return document.getElementById(i); };
   var enc = new TextEncoder(), dec = new TextDecoder();
   var GHD = { u: "studiohdgafsa-commits", r: "HDS-panel", b: "main", f: "config.json" };
-  var TILES = [["settings", "الإعدادات · Paramètres"], ["live", "قنوات مباشرة · Live TV"], ["movies", "أفلام · Movies"], ["radio", "راديو · Radio"], ["series", "مسلسلات · Series"], ["kids", "أطفال · Kids"], ["quran", "قرآن كريم · Coran"], ["expiry", "صلاحية السيرفر"], ["edit", "ترتيب القنوات"], ["prayer", "مواقيت الصلاة"], ["update", "تحديث التطبيقات"], ["news", "جديد المنصة · HDS News"], ["sport", "دليل الرياضة · HDS Sport"]];
-  var SOCS = [["tg", "تيليغرام"], ["wa", "واتساب"], ["tt", "تيك توك"], ["fb", "فيسبوك"], ["ig", "إنستغرام"]];
+  var TILES = [["settings", "الإعدادات · Paramètres"], ["live", "قنوات مباشرة · Live TV"], ["movies", "أفلام · Movies"], ["radio", "راديو · Radio"], ["series", "مسلسلات · Series"], ["kids", "أطفال · Kids"], ["quran", "قرآن كريم · Coran"], ["expiry", "صلاحية السيرفر"], ["edit", "ترتيب القنوات"], ["prayer", "مواقيت الصلاة"], ["update", "تحميل التطبيقات · App Downloader"], ["news", "جديد المنصة · HDS News"], ["sport", "دليل الرياضة · HDS Sport"], ["games", "ألعاب · Games"]];
+  var SOCS = [["tg", "تيليغرام"], ["wa", "واتساب"], ["tt", "تيك توك"], ["fb", "فيسبوك"], ["ig", "إنستغرام"], ["yt", "يوتيوب"]];
   var SLOTS = ["H", "N", "S", "E", "M", "A", "P", "MT", "B"];
   var DEF = {
     servers: [{ name: "HDS.H", url: "http://plus-577sghag.lol" }, { name: "HDS.N", url: "http://until56972.wd.business-cloud-neo.com" }, { name: "HDS.E", url: "http://139730421906.elg-26.com:80" }, { name: "HDS.M", url: "http://b9999.xyz" }],
     whatsapp: "21629575199", waLabel: "استفسار", facebook: "https://www.facebook.com/share/g/1Mx4Htun2B/", fbLabel: "جديد المنصة",
-    telegram: "https://t.me/+TQgs42z0nsA5MzY8", tiktok: "https://www.tiktok.com/@hdsmartservices", instagram: "https://www.instagram.com/hds96099?srtk=MWg1d3prYmgzZzJrag==",
+    telegram: "https://t.me/+TQgs42z0nsA5MzY8", tiktok: "https://www.tiktok.com/@hdsmartservices", instagram: "https://www.instagram.com/hds96099?srtk=MWg1d3prYmgzZzJrag==", youtube: "https://youtube.com/@hds-tube?si=F7zdcgVxE2LqM0h-", gamesUrl: "https://www.google.fr/logos/2010/pacman10-i.html",
     updateUrl: "https://hds-app-store.hds-8cc.workers.dev", newsUrl: "", welcome: "مرحبا بكم في عالم الفرجة HDS", intro: true, city: "Tunis", country: "Tunisia",
-    hide: [], socOff: [], notice: "", maint: { on: false, text: "" }
+    hide: [], socOff: [], notice: "", maint: { on: false, text: "" }, bg: "hex", bgUrl: "", dim: 75, menu: "glass"
   };
-  var S = null, PASS = null, USER = "HDS", dirty = false, lastSeq = 0, failN = 0, idleT = null, built = false, tt = null;
+  var S = null, PASS = null, USER = "HDS", dirty = false, lastSeq = 0, failN = 0, idleT = null, built = false, tt = null, hiddenAt = 0;
+  if (window.top !== window.self) { document.documentElement.innerHTML = ""; return; }
+  function lockInfo() { try { return JSON.parse(localStorage.getItem("hdsLock") || "{}"); } catch (e) { return {}; } }
+  function lockFail() { var i = lockInfo(), n = (i.n || 0) + 1, until = n >= 5 ? Date.now() + Math.min(Math.pow(2, n - 5) * 60000, 3600000) : 0; localStorage.setItem("hdsLock", JSON.stringify({ n: n, until: until })); }
+  function lockClear() { localStorage.removeItem("hdsLock"); }
 
   function toast(m, bad) { var t = $("toast"); t.textContent = m; t.className = "show" + (bad ? " bad" : ""); clearTimeout(tt); tt = setTimeout(function () { t.className = ""; }, bad ? 5200 : 3200); }
   function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
@@ -291,6 +356,7 @@ small.k{display:block;direction:ltr;text-align:left;color:var(--mut);word-break:
     var u = $("lgUser").value.trim().toUpperCase(), p = $("lgPass").value;
     if (!u || !p) { lgErr("أدخل اسم المستخدم وكلمة السر"); return; }
     if (!(window.crypto && crypto.subtle)) { lgErr("هذا المتصفح لا يدعم التشفير. افتح اللوحة عبر Chrome."); return; }
+    var li = lockInfo(); if (li.until && li.until > Date.now()) { lgErr("محاولات كثيرة. انتظر " + Math.ceil((li.until - Date.now()) / 60000) + " دقيقة ثم أعد المحاولة."); return; }
     lgErr(""); $("lgGo").disabled = true;
     if (failN) await sleep(Math.min(failN, 6) * 900);
     var vbytes = 0;
@@ -302,12 +368,12 @@ small.k{display:block;direction:ltr;text-align:left;color:var(--mut);word-break:
         var txt = await r.text(); vbytes = txt.length; v = JSON.parse(txt);
       }
       try { got = await openAny(u, p, v); } catch (e) { var er2 = new Error(e && e.name === "OperationError" ? "bad" : "tech"); er2.orig = e; throw er2; }
-      S = got.obj; PASS = got.pass; USER = u; failN = 0;
+      S = got.obj; PASS = got.pass; USER = u; failN = 0; lockClear();
       if (!local) await persist();
       $("lgPass").value = ""; $("login").classList.add("hidden"); $("app").classList.remove("hidden");
       init();
     } catch (e) {
-      failN++;
+      failN++; if (e.message !== "novault") lockFail();
       if (e.message === "novault") lgErr("E1: ملف vault.json غير موجود في المستودع (الرمز " + (e.code || "?") + "). تأكد من رفعه ثم أعد المحاولة بعد دقيقة.");
       else if (e.message === "tech") lgErr("E3: خطأ تقني في المتصفح: " + ((e.orig && (e.orig.name + " " + e.orig.message)) || "") + " — جرّب متصفح Chrome.");
       else lgErr("E2: بيانات الدخول غير صحيحة" + (vbytes ? " (حجم vault.json = " + vbytes + " بايت، والأصلي 717)" : ""));
@@ -346,7 +412,7 @@ small.k{display:block;direction:ltr;text-align:left;color:var(--mut);word-break:
     SOCS.forEach(function (t) { $("socs").appendChild(sw("sc-" + t[0], t[1])); });
     [].forEach.call(document.querySelectorAll("#tabs button"), function (b) { b.addEventListener("click", function () { go(b.getAttribute("data-t")); }); });
     document.addEventListener("input", function (e) { if (e.target && e.target.closest && e.target.closest("main") && !/^(pw|tok|gh)/.test(e.target.id)) { setDirty(true); preview(); } });
-    document.addEventListener("change", function (e) { if (e.target && e.target.closest && e.target.closest("main") && /^(tl|sc|introOn|mOn)/.test(e.target.id)) { setDirty(true); preview(); } });
+    document.addEventListener("change", function (e) { if (e.target && e.target.closest && e.target.closest("main") && /^(tl|sc|introOn|mOn|bg|menu)/.test(e.target.id)) { setDirty(true); preview(); } });
   }
   function setDirty(v) { dirty = v; var d = $("dirty"); d.textContent = v ? "لديك تغييرات غير محفوظة" : ""; d.className = "st" + (v ? " dirty" : ""); }
   function ghTxt() { var ok = !!(S && S.t); $("ghState").firstChild.className = "dot " + (ok ? "ok" : "no"); $("ghTxt").textContent = ok ? "متصل بـ GitHub" : "أضف رمز GitHub"; $("tokNote").classList.toggle("hidden", ok); }
@@ -367,9 +433,9 @@ small.k{display:block;direction:ltr;text-align:left;color:var(--mut);word-break:
     TILES.forEach(function (t) { $("tl-" + t[0]).checked = (c.hide || []).indexOf(t[0]) < 0; });
     SOCS.forEach(function (t) { $("sc-" + t[0]).checked = (c.socOff || []).indexOf(t[0]) < 0; });
     $("notice").value = c.notice || ""; $("wa").value = c.whatsapp || ""; $("waL").value = c.waLabel || ""; $("fbL").value = c.fbLabel || "";
-    $("fb").value = c.facebook || ""; $("ig").value = c.instagram || ""; $("tt").value = c.tiktok || ""; $("tg").value = c.telegram || "";
-    $("news").value = c.newsUrl || ""; $("upd").value = c.updateUrl || ""; $("welcome").value = c.welcome || ""; $("introOn").checked = c.intro !== false;
-    $("city").value = c.city || ""; $("country").value = c.country || ""; $("mOn").checked = !!(c.maint && c.maint.on); $("mTxt").value = (c.maint && c.maint.text) || "";
+    $("fb").value = c.facebook || ""; $("ig").value = c.instagram || ""; $("tt").value = c.tiktok || ""; $("tg").value = c.telegram || ""; $("yt").value = c.youtube || "";
+    $("news").value = c.newsUrl || ""; $("upd").value = c.updateUrl || ""; $("gm").value = c.gamesUrl || ""; $("welcome").value = c.welcome || ""; $("introOn").checked = c.intro !== false;
+    $("bg").value = c.bg || "hex"; $("bgUrl").value = c.bgUrl || ""; $("dim").value = c.dim || 75; $("dimV").textContent = $("dim").value; $("menu").value = c.menu || "glass"; $("city").value = c.city || ""; $("country").value = c.country || ""; $("mOn").checked = !!(c.maint && c.maint.on); $("mTxt").value = (c.maint && c.maint.text) || "";
     setDirty(false); preview();
   }
   function collect() {
@@ -385,13 +451,66 @@ small.k{display:block;direction:ltr;text-align:left;color:var(--mut);word-break:
     SOCS.forEach(function (t) { if (!$("sc-" + t[0]).checked) socOff.push(t[0]); });
     return {
       seq: 0, servers: servers, whatsapp: wa, waLabel: clean($("waL").value, 30), facebook: link("fb", "فيسبوك", /^https:\/\/(www\.|m\.|web\.)?(facebook\.com|fb\.com|fb\.me)\//i), fbLabel: clean($("fbL").value, 30),
-      telegram: link("tg", "تيليغرام", /^https:\/\/(t\.me|telegram\.me)\//i), tiktok: link("tt", "تيك توك", /^https:\/\/(www\.)?tiktok\.com\//i), instagram: link("ig", "إنستغرام", /^https:\/\/(www\.)?instagram\.com\//i),
-      updateUrl: link("upd", "التحديث"), newsUrl: link("news", "جديد المنصة"), welcome: clean($("welcome").value, 120), intro: $("introOn").checked,
-      city: clean($("city").value, 40), country: clean($("country").value, 40), hide: hide, socOff: socOff, notice: clean($("notice").value, 200), maint: { on: $("mOn").checked, text: clean($("mTxt").value, 240) }
+      telegram: link("tg", "تيليغرام", /^https:\/\/(t\.me|telegram\.me)\//i), tiktok: link("tt", "تيك توك", /^https:\/\/(www\.)?tiktok\.com\//i), instagram: link("ig", "إنستغرام", /^https:\/\/(www\.)?instagram\.com\//i), youtube: link("yt", "يوتيوب", /^https:\/\/(www\.|m\.)?(youtube\.com|youtu\.be)\//i),
+      updateUrl: link("upd", "التحميل"), gamesUrl: link("gm", "الألعاب"), newsUrl: link("news", "جديد المنصة"), welcome: clean($("welcome").value, 120), intro: $("introOn").checked,
+      city: clean($("city").value, 40), country: clean($("country").value, 40), hide: hide, socOff: socOff, bg: $("bg").value, bgUrl: link("bgUrl", "الخلفية"), dim: +$("dim").value || 75, menu: $("menu").value, notice: clean($("notice").value, 200), maint: { on: $("mOn").checked, text: clean($("mTxt").value, 240) }
     };
   }
   var pvT = null;
   function preview() { clearTimeout(pvT); pvT = setTimeout(function () { try { $("prev").textContent = JSON.stringify(collect(), null, 2); } catch (e) { $("prev").textContent = e.message; } }, 150); }
+
+
+  /* ---------- appareils (MAC) ---------- */
+  var DEVS = [];
+  function normMac(x) { var h = String(x).toUpperCase().replace(/[^0-9A-F]/g, ""); return h.length === 12 ? h.match(/../g).join(":") : ""; }
+  function normKey(x) { var k = String(x).toUpperCase().replace(/[^A-Z2-9]/g, ""); return k.length === 8 ? k : ""; }
+  function hex(buf) { var a = new Uint8Array(buf), s = ""; for (var i = 0; i < a.length; i++) s += ("0" + a[i].toString(16)).slice(-2); return s; }
+  async function sha24(m) { return hex(await crypto.subtle.digest("SHA-256", enc.encode(m))).slice(0, 24); }
+  async function encDev(d) {
+    var salt = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12));
+    var base = await crypto.subtle.importKey("raw", enc.encode(d.mac + "|" + d.key), "PBKDF2", false, ["deriveKey"]);
+    var k = await crypto.subtle.deriveKey({ name: "PBKDF2", salt: salt, iterations: 150000, hash: "SHA-256" }, base, { name: "AES-GCM", length: 256 }, false, ["encrypt"]);
+    var ct = await crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, k, enc.encode(JSON.stringify({ u: d.url, n: d.user, p: d.pass, l: d.label })));
+    return { h: await sha24(d.mac), s: b64(salt), i: b64(iv), d: b64(ct) };
+  }
+  async function dvKey() { var h = await crypto.subtle.digest("SHA-256", enc.encode("hds-dv|" + S.k.d)); return crypto.subtle.importKey("raw", h, "AES-GCM", false, ["encrypt", "decrypt"]); }
+  async function sealDevs() { var iv = crypto.getRandomValues(new Uint8Array(12)), ct = await crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, await dvKey(), enc.encode(JSON.stringify(DEVS))); return { i: b64(iv), d: b64(ct) }; }
+  async function openDevs(dv) {
+    DEVS = [];
+    if (dv && dv.i && dv.d) { try { DEVS = JSON.parse(dec.decode(await crypto.subtle.decrypt({ name: "AES-GCM", iv: unb64(dv.i) }, await dvKey(), unb64(dv.d)))); } catch (e) { DEVS = []; } }
+    renderDevs();
+  }
+  function renderDevs() {
+    var box = $("devList"); box.innerHTML = ""; $("dCount").textContent = DEVS.length ? "(" + DEVS.length + ")" : "";
+    if (!DEVS.length) { var p = document.createElement("p"); p.className = "h"; p.textContent = "لا توجد أجهزة مضافة بعد."; box.appendChild(p); return; }
+    DEVS.forEach(function (d, i) {
+      var r = document.createElement("div"); r.className = "dv";
+      var l = document.createElement("span"); l.className = "l"; l.textContent = d.label || "(بدون اسم)";
+      var m = document.createElement("span"); m.className = "m"; m.textContent = d.mac;
+      var u = document.createElement("span"); u.className = "u"; u.textContent = d.url;
+      var e = document.createElement("button"); e.type = "button"; e.className = "ghost"; e.textContent = "تعديل";
+      e.addEventListener("click", function () { $("dMac").value = d.mac; $("dKey").value = d.key; $("dLabel").value = d.label || ""; $("dUrl").value = d.url; $("dUser").value = d.user; $("dPass").value = d.pass; window.scrollTo(0, 0); });
+      var x = document.createElement("button"); x.type = "button"; x.className = "warn"; x.textContent = "حذف";
+      x.addEventListener("click", function () { if (window.confirm("حذف هذا الجهاز؟")) { DEVS.splice(i, 1); renderDevs(); setDirty(true); } });
+      r.appendChild(l); r.appendChild(m); r.appendChild(u); r.appendChild(e); r.appendChild(x); box.appendChild(r);
+    });
+  }
+  function addDev() {
+    var mac = normMac($("dMac").value), key = normKey($("dKey").value), url = $("dUrl").value.trim().replace(/\/+$/, ""), user = $("dUser").value.trim(), pass = $("dPass").value;
+    if (!mac) { toast("عنوان MAC غير صحيح (12 خانة سداسية)", true); return; }
+    if (!key) { toast("Device Key غير صحيح (8 أحرف/أرقام)", true); return; }
+    if (!/^https?:\/\/[^\s<>"'`]+$/i.test(url)) { toast("عنوان السيرفر يجب أن يبدأ بـ http:// أو https://", true); return; }
+    if (!user || !pass) { toast("أدخل اسم المستخدم وكلمة السر", true); return; }
+    var d = { mac: mac, key: key, label: clean($("dLabel").value, 40), url: url, user: user, pass: pass };
+    var ix = -1; DEVS.forEach(function (x, i) { if (x.mac === mac) ix = i; });
+    if (ix >= 0) DEVS[ix] = d; else DEVS.push(d);
+    ["dMac", "dKey", "dLabel", "dUrl", "dUser", "dPass"].forEach(function (id) { $(id).value = ""; });
+    renderDevs(); setDirty(true); toast("أُضيف الجهاز. اضغط «حفظ ونشر» لتطبيقه.");
+  }
+  async function withDevices(cfg) {
+    for (var i = 0; i < DEVS.length; i++) { if (!DEVS[i].e) { toast("جارٍ تشفير الجهاز " + (i + 1) + " من " + DEVS.length + "…"); DEVS[i].e = await encDev(DEVS[i]); } }
+    cfg.devices = DEVS.map(function (d) { return d.e; }); cfg.dv = await sealDevs(); return cfg;
+  }
 
   /* ---------- GitHub ---------- */
   function api(g, path) { return "https://api.github.com/repos/" + encodeURIComponent(g.u) + "/" + encodeURIComponent(g.r) + "/contents/" + path.split("/").map(encodeURIComponent).join("/"); }
@@ -404,8 +523,8 @@ small.k{display:block;direction:ltr;text-align:left;color:var(--mut);word-break:
       if (r.status === 401 || r.status === 403) throw new Error("الرمز غير صالح أو لا يملك الصلاحية (" + r.status + ")");
       if (!r.ok) throw new Error("تعذّر التحميل (" + r.status + ")");
       var j = await r.json(), env = JSON.parse(dec.decode(unb64(j.content))), cfg = env.payload ? JSON.parse(env.payload) : env;
-      lastSeq = +cfg.seq || 0; fill(cfg); if (!quiet) toast("تم تحميل الإعدادات الحالية");
-    } catch (e) { fill(DEF); toast(e.message || "تعذّر التحميل", true); }
+      lastSeq = +cfg.seq || 0; fill(cfg); await openDevs(cfg.dv); if (!quiet) toast("تم تحميل الإعدادات الحالية");
+    } catch (e) { fill(DEF); DEVS = []; renderDevs(); toast(e.message || "تعذّر التحميل", true); }
   }
   async function sign(text) {
     var key = await crypto.subtle.importKey("jwk", S.k, { name: "ECDSA", namedCurve: "P-256" }, false, ["sign"]);
@@ -425,7 +544,7 @@ small.k{display:block;direction:ltr;text-align:left;color:var(--mut);word-break:
     var cfg; try { cfg = collect(); } catch (e) { toast(e.message, true); return; }
     $("save").disabled = true;
     try {
-      cfg.seq = Math.max(Date.now(), lastSeq + 1);
+      cfg.seq = Math.max(Date.now(), lastSeq + 1); cfg = await withDevices(cfg);
       var payload = JSON.stringify(cfg), sig = await sign(payload), g = gh();
       await putFile(g, g.f, JSON.stringify({ payload: payload, sig: sig }, null, 2), "تحديث الإعدادات من اللوحة");
       lastSeq = cfg.seq; setDirty(false); toast("تم الحفظ والنشر ✓ يصل التغيير إلى التطبيق خلال دقائق");
@@ -434,7 +553,7 @@ small.k{display:block;direction:ltr;text-align:left;color:var(--mut);word-break:
   }
   async function download() {
     if (!S) return; var cfg; try { cfg = collect(); } catch (e) { toast(e.message, true); return; }
-    cfg.seq = Math.max(Date.now(), lastSeq + 1);
+    cfg.seq = Math.max(Date.now(), lastSeq + 1); cfg = await withDevices(cfg);
     var payload = JSON.stringify(cfg), sig = await sign(payload);
     var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify({ payload: payload, sig: sig }, null, 2)], { type: "application/json" })); a.download = "config.json"; a.click();
   }
@@ -468,9 +587,11 @@ small.k{display:block;direction:ltr;text-align:left;color:var(--mut);word-break:
   [$("lgUser"), $("lgPass")].forEach(function (el) { el.addEventListener("keydown", function (e) { if (e.key === "Enter") login(); }); });
   $("lockBtn").addEventListener("click", lock);
   $("save").addEventListener("click", save); $("load").addEventListener("click", function () { loadCfg(false); }); $("dl").addEventListener("click", download);
-  $("tokSave").addEventListener("click", saveToken); $("pwSave").addEventListener("click", changePw); $("bkDl").addEventListener("click", backup); $("vDel").addEventListener("click", delVault);
+  $("dAdd").addEventListener("click", addDev); $("tokSave").addEventListener("click", saveToken); $("pwSave").addEventListener("click", changePw); $("bkDl").addEventListener("click", backup); $("vDel").addEventListener("click", delVault);
   ["pointerdown", "keydown"].forEach(function (ev) { document.addEventListener(ev, function () { if (S) idle(); }, true); });
+  document.addEventListener("visibilitychange", function () { if (document.hidden) hiddenAt = Date.now(); else if (S && hiddenAt && Date.now() - hiddenAt > 5 * 60000) { lock(); lgErr("أُغلقت الجلسة بعد غياب طويل"); } });
   window.addEventListener("beforeunload", function (e) { if (dirty) { e.preventDefault(); e.returnValue = ""; } });
+  $("dim").addEventListener("input", function () { $("dimV").textContent = $("dim").value; });
   $("lgUser").value = "HDS";
 })();
 </script>
